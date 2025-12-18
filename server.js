@@ -14,7 +14,8 @@ app.use("/uploads", express.static("uploads"));
 
 app.use("/auth", require("./src/routes/auth.routes"));
 app.use("/informations-accueil", require("./src/routes/informationsAccueil.routes"));
-
+app.use("/posts", require("./src/routes/posts.routes"));
+app.use("/comments", require("./src/routes/comments.routes"));
 const PORT = process.env.API_PORT || 3000;
 
 async function start() {
