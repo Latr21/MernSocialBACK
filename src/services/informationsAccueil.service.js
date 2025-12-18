@@ -27,16 +27,7 @@ const reponse = (error, message, statusCode, data) => ({
   ...(data !== undefined ? { data } : {}),
 });
 
-// Convertit "true"/"false" (string) en boolean. Sinon, renvoie la valeur par défaut.
-const parseBoolean = (value, def) => {
-  if (typeof value === "boolean") return value;
-  if (typeof value === "string") {
-    const v = value.trim().toLowerCase();
-    if (v === "true") return true;
-    if (v === "false") return false;
-  }
-  return def;
-};
+
 
 exports.Create = async (data) => {
   try {
