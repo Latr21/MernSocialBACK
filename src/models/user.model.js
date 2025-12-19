@@ -32,7 +32,7 @@ const userSchema = new Schema(
       default: "",
     },
 
-    // SOCIAL
+
     followers: [
       {
         type: Schema.Types.ObjectId,

@@ -1,5 +1,4 @@
 const userService = require("../services/users.service");
-const Post = require("../models/post.model");
 
 async function getProfile(req, res) {
   const { id } = req.params;
@@ -11,7 +10,7 @@ async function getProfile(req, res) {
 }
 
 async function updateProfile(req, res) {
-  const userId = req.user.id; // vient du middleware d’auth
+  const userId = req.user.id; 
   const result = await userService.updateProfile(userId, req.body);
   if (!result.ok) {
     return res.status(result.status).json({ error: result.error });
@@ -19,23 +18,15 @@ async function updateProfile(req, res) {
   return res.status(result.status).json(result.data);
 }
 
-async function getUserPosts(userId) {
-  try {
-    const posts = await Post.find({ author: userId })
-      .sort({ createdAt: -1 }); 
+async function getUserPosts(req, res) {
+  const { id } = req.params; 
+  const result = await userService.getUserPosts(id);
 
-    return {
-      ok: true,
-      status: 200,
-      data: { posts },
-    };
-  } catch (error) {
-    return {
-      ok: false,
-      status: 500,
-      error: error.message || "Erreur interne",
-    };
+  if (!result.ok) {
+    return res.status(result.status).json({ error: result.error });
   }
+
+  return res.status(result.status).json(result.data);
 }
 
 async function getFollowers(req, res) {

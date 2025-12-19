@@ -3,7 +3,7 @@ const Post = require("../models/post.model");
 async function getUserPosts(userId) {
   try {
     const posts = await Post.find({ author: userId })
-      .sort({ createdAt: -1 }); // plus récent → plus ancien
+      .sort({ createdAt: -1 }); 
 
     return {
       error: false,

@@ -1,5 +1,5 @@
 const User = require("../models/user.model");
-// const Post = require("../models/post.model"); A décom quand post.model sera fait
+const Post = require("../models/post.model"); 
 
 async function getProfile(userId) {
   const user = await User.findById(userId).select("username email bio avatarUrl followers following createdAt");

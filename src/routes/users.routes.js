@@ -30,7 +30,7 @@ router.get("/:id/following", usersController.getFollowing);
 // follow / unfollow
 
 router.post("/:id/follow", authenticate, usersController.followUser);
-router.delete("/:id/follow", authenticate, usersController.unfollowUser);
+router.delete("/:id/unfollow", authenticate, usersController.unfollowUser);
 
 router.get("/me", auth, (req, res) => {
   return res.status(200).json({
