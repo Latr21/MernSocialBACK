@@ -29,27 +29,15 @@ exports.GetAllInformationsAccueil = async (_req, res) => {
   return res.status(result.statusCode).json(result);
 };
 
-exports.GetOneInformationAccueil = async (req, res) => {
-  const { id } = req.params;
-  if (!mongoose.isValidObjectId(id)) return reponseIdInvalide(res);
-
-  const result = await service.GetOne(id);
-  return res.status(result.statusCode).json(result);
-};
 
 exports.UpdateOneInformationAccueil = async (req, res) => {
   const { id } = req.params;
   if (!mongoose.isValidObjectId(id)) return reponseIdInvalide(res);
 
-  const image_url = req.file
-    ? `/uploads/informations-accueil/${req.file.filename}`
-    : undefined; // pas de fichier => ne change pas l'image
-
-  const payload = {
-    ...req.body,
-    ...(image_url !== undefined ? { image_url } : {}),
-  };
-
+  const payload = req.body;
+  if (req.file) {
+    payload.image_url = `/uploads/informations-accueil/${req.file.filename}`;
+  }
   const result = await service.UpdateOne(id, payload);
   return res.status(result.statusCode).json(result);
 };

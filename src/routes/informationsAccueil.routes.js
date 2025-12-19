@@ -18,7 +18,7 @@ router.post(
 );
 
 router.get("/", controller.GetAllInformationsAccueil);
-router.get("/:id", controller.GetOneInformationAccueil);
+
 
 router.patch(
   "/:id",
