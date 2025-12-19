@@ -1,44 +1,22 @@
-require("dotenv").config();
-
-const express = require("express");
-const cors = require("cors");
-const mongoose = require("mongoose");
-
+require("dotenv").config(); // var env
+const express = require("express"); // crée app express
+const cors = require("cors");  
+const connectDB = require("./config/database.config");
 const app = express();
+const path = require("path");
 
-
-app.use(cors({ origin: true }));
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-app.use("/uploads", express.static("uploads"));
-
-
-app.get("/", (_req, res) => {
-  return res.status(200).json({ message: "API fonctionnelle" });
-});
-
-
-app.use("/auth", require("./src/routes/auth.routes"));
-app.use("/users", require("./src/routes/users.routes"));
-app.use("/informations-accueil", require("./src/routes/informationsAccueil.routes"));
+app.use("/uploads", express.static(path.join(__dirname, "uploads"))); // dossier pour les images
 app.use("/posts", require("./src/routes/posts.routes"));
-app.use("/comments", require("./src/routes/comments.routes"));
+// pourquoi ne pas app.use("/posts/comments", commentsRoutes); ??  : postID perdu ( commentaires = sous partie d'un post)
+app.get("/", (_, res) => res.status(200).json({ message: "API fonctionnelle" }));
+app.use("/informations-accueil", require("./src/routes/informationsAccueil.routes"));
+
+connectDB();
+
 const PORT = process.env.API_PORT || 3000;
-
-async function start() {
-  try {
-    await mongoose.connect(process.env.MONGODB_URI);
-    console.log(" Connexion Mongo OK");
-
-    app.listen(PORT, () => {
-      console.log(`API démarrée sur : http://localhost:${PORT}`);
-    });
-  } catch (err) {
-    console.error("Erreur connexion Mongo :", err.message);
-    process.exit(1);
-  }
-}
-
-start();
+app.listen(PORT, () => console.log(`API démarrée sur http://localhost:${PORT}`));

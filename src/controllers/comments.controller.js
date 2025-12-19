@@ -1,9 +1,6 @@
 const CommentsController = require("../services/comments.service");
 
 exports.AddComment = async (req, res) => {
-  console.log("ADD COMMENT REACHED");
-  console.log("params:", req.params);
-  console.log("body:", req.body);
   const { postId } = req.params;
   const { author, text } = req.body;
 

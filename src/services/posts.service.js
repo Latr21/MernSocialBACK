@@ -1,90 +1,80 @@
-const Post = require("../models/post.model");
+const Posts = require("../models/post.model");
 
 async function getUserPosts(userId) {
   try {
-    const posts = await Post.find({ author: userId })
-      .sort({ createdAt: -1 }); // plus récent → plus ancien
-
-    return {
-      error: false,
-      message: "Posts récupérés",
-      data: { posts },
-      statusCode: 200,
-    };
+    const posts = await Posts.find({ author: userId }).sort({ createdAt: -1 });
+    return { error: false, message: "posts recuperes", data: { posts }, statusCode: 200 };
   } catch (error) {
-    return {
-      error: true,
-      message: error.message || "Erreur interne",
-      statusCode: 500,
-    };
+    return { error: true, message: error.message || "erreur interne", statusCode: 500 };
   }
 }
 
-module.exports = {
-  getUserPosts
-};
-const Posts = require("../../models/Posts");
-
-exports.Create = async ({ author, content, image }) => {
+async function createPost({ author, content, image }) {
   try {
-    const isExists = await Posts.findOne({ content });
-    if (isExists) return { error: true, message: "Un post identique existe déjà", statusCode: 400 };
+    const existant = await Posts.findOne({ content });
+    if (existant) return { error: true, message: "un post identique existe deja", statusCode: 400 };
 
-    const newPostData = { author: author.trim(), content: content.trim(), image };
-    const newPost = new Posts(newPostData);
+    const newPost = new Posts({ author: author.trim(), content: content.trim(), image });
     await newPost.save();
 
-    return { error: false, message: "Post créé avec succès", data: newPost, statusCode: 201 };
+    return { error: false, message: "post cree avec succes", data: newPost, statusCode: 201 };
   } catch (error) {
     return { error: true, message: error.message, statusCode: 500 };
   }
-};
+}
 
-exports.GetAll = async () => {
+async function getAllPosts() {
   try {
     const posts = await Posts.find().sort({ createdAt: -1 });
-    return { error: false, message: "Posts récupérés avec succes", data: posts, statusCode: 200 };
+    return { error: false, message: "posts recuperes avec succes", data: posts, statusCode: 200 };
   } catch (error) {
     return { error: true, message: error.message, statusCode: 500 };
   }
-};
+}
 
-exports.GetOne = async (id) => {
+async function getOnePost(id) {
   try {
     const post = await Posts.findById(id);
     return {
-      error: post ? false : true,
-      message: post ? "Post récupéré avec succès." : "Post n'existe pas",
+      error: !post,
+      message: post ? "post recupere avec succes" : "post n'existe pas",
       data: post || null,
       statusCode: post ? 200 : 404,
     };
   } catch (error) {
     return { error: true, message: error.message, statusCode: 500 };
   }
-};
+}
 
-exports.UpdateOne = async (id, { content }) => {
+async function updatePost(id, { content }) {
   try {
     const post = await Posts.findById(id);
-    if (!post) return { error: true, message: "Post n'existe pas", statusCode: 404 };
+    if (!post) return { error: true, message: "post n'existe pas", statusCode: 404 };
 
-    const updatedData = { content: content ?? post.content };
-    const updatedPost = await Posts.findByIdAndUpdate(id, updatedData, { new: true });
-
-    return { error: false, message: "Post mis à jour avec succès.", data: updatedPost, statusCode: 200 };
+    const updatedPost = await Posts.findByIdAndUpdate(id, { content: content ?? post.content }, { new: true });
+    return { error: false, message: "post mis a jour avec succes", data: updatedPost, statusCode: 200 };
   } catch (error) {
     return { error: true, message: error.message, statusCode: 500 };
   }
-};
+}
 
-exports.DeleteOne = async (id) => {
+async function deletePost(id) {
   try {
     const post = await Posts.findById(id);
-    if (!post) return { error: true, message: "Post n'existe pas", statusCode: 404 };
+    if (!post) return { error: true, message: "post n'existe pas", statusCode: 404 };
 
     await Posts.findByIdAndDelete(id);
-    return { error: false, message: "Post supprimé avec succès.", statusCode: 200 };
+    return { error: false, message: "post supprime avec succes", statusCode: 200 };
   } catch (error) {
     return { error: true, message: error.message, statusCode: 500 };
   }
+}
+
+module.exports = {
+  getUserPosts,
+  createPost,
+  getAllPosts,
+  getOnePost,
+  updatePost,
+  deletePost
 };
