@@ -2,12 +2,16 @@ const Posts = require("../models/post.model");
 
 async function getUserPosts(userId) {
   try {
+<<<<<<< HEAD
     const posts = await Posts.find({ author: userId }).sort({ createdAt: -1 });
     return { error: false, message: "posts recuperes", data: { posts }, statusCode: 200 };
   } catch (error) {
     return { error: true, message: error.message || "erreur interne", statusCode: 500 };
   }
 }
+=======
+    const posts = await Post.find({ author: userId }).sort({ createdAt: -1 });
+>>>>>>> feature/profile-friends
 
 async function createPost({ author, content, image }) {
   try {
@@ -36,6 +40,7 @@ async function getOnePost(id) {
   try {
     const post = await Posts.findById(id);
     return {
+<<<<<<< HEAD
       error: !post,
       message: post ? "post recupere avec succes" : "post n'existe pas",
       data: post || null,
@@ -67,14 +72,29 @@ async function deletePost(id) {
     return { error: false, message: "post supprime avec succes", statusCode: 200 };
   } catch (error) {
     return { error: true, message: error.message, statusCode: 500 };
+=======
+      ok: true,
+      status: 200,
+      data: { posts },
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      status: 500,
+      error: error.message || "Erreur interne",
+    };
+>>>>>>> feature/profile-friends
   }
 }
 
 module.exports = {
   getUserPosts,
+<<<<<<< HEAD
   createPost,
   getAllPosts,
   getOnePost,
   updatePost,
   deletePost
+=======
+>>>>>>> feature/profile-friends
 };

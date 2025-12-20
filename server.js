@@ -10,6 +10,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
+<<<<<<< HEAD
 app.use("/uploads", express.static(path.join(__dirname, "uploads"))); // dossier pour les images
 app.use("/posts", require("./src/routes/posts.routes"));
 // pourquoi ne pas app.use("/posts/comments", commentsRoutes); ??  : postID perdu ( commentaires = sous partie d'un post)
@@ -17,6 +18,11 @@ app.get("/", (_, res) => res.status(200).json({ message: "API fonctionnelle" }))
 app.use("/informations-accueil", require("./src/routes/informationsAccueil.routes"));
 
 connectDB();
+=======
+app.use("/auth", require("./src/routes/auth.routes"));
+app.use("/users", require("./src/routes/users.routes"));
+app.use("/posts", require("./src/routes/posts.routes")); 
+>>>>>>> feature/profile-friends
 
 const PORT = process.env.API_PORT || 3000;
 app.listen(PORT, () => console.log(`API démarrée sur http://localhost:${PORT}`));

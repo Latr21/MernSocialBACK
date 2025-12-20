@@ -15,7 +15,7 @@ const postSchema = new Schema(
     },
   },
   {
-    timestamps: true, // createdAt pour trier
+    timestamps: true,
   }
 );
 
