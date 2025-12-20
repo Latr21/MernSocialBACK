@@ -2,24 +2,22 @@ const Post = require("../models/post.model");
 
 async function getUserPosts(userId) {
   try {
-    const posts = await Post.find({ author: userId })
-      .sort({ createdAt: -1 }); 
+    const posts = await Post.find({ author: userId }).sort({ createdAt: -1 });
 
     return {
-      error: false,
-      message: "Posts récupérés",
+      ok: true,
+      status: 200,
       data: { posts },
-      statusCode: 200,
     };
   } catch (error) {
     return {
-      error: true,
-      message: error.message || "Erreur interne",
-      statusCode: 500,
+      ok: false,
+      status: 500,
+      error: error.message || "Erreur interne",
     };
   }
 }
 
 module.exports = {
-  getUserPosts
+  getUserPosts,
 };

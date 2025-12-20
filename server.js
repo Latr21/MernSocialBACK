@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 
 const app = express();
 
-app.use(cors()); 
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -17,6 +17,7 @@ app.get("/", (_, res) => {
 
 app.use("/auth", require("./src/routes/auth.routes"));
 app.use("/users", require("./src/routes/users.routes"));
+app.use("/posts", require("./src/routes/posts.routes")); 
 
 const PORT = process.env.API_PORT || 3000;
 

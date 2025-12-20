@@ -10,7 +10,7 @@ async function getProfile(req, res) {
 }
 
 async function updateProfile(req, res) {
-  const userId = req.user.id; 
+  const userId = req.user.id;
   const result = await userService.updateProfile(userId, req.body);
   if (!result.ok) {
     return res.status(result.status).json({ error: result.error });
@@ -19,13 +19,11 @@ async function updateProfile(req, res) {
 }
 
 async function getUserPosts(req, res) {
-  const { id } = req.params; 
+  const { id } = req.params;
   const result = await userService.getUserPosts(id);
-
   if (!result.ok) {
     return res.status(result.status).json({ error: result.error });
   }
-
   return res.status(result.status).json(result.data);
 }
 
@@ -67,6 +65,49 @@ async function unfollowUser(req, res) {
   return res.status(result.status).json(result.data);
 }
 
+async function createUser(req, res) {
+  const result = await userService.createUser(req.body);
+  if (!result.ok) {
+    return res.status(result.status).json({ error: result.error });
+  }
+  return res.status(result.status).json(result.data);
+}
+
+async function getUsers(req, res) {
+  const result = await userService.getUsers();
+  if (!result.ok) {
+    return res.status(result.status).json({ error: result.error });
+  }
+  return res.status(result.status).json(result.data);
+}
+
+async function getUserById(req, res) {
+  const { id } = req.params;
+  const result = await userService.getUserById(id);
+  if (!result.ok) {
+    return res.status(result.status).json({ error: result.error });
+  }
+  return res.status(result.status).json(result.data);
+}
+
+async function updateUser(req, res) {
+  const { id } = req.params;
+  const result = await userService.updateUser(id, req.body);
+  if (!result.ok) {
+    return res.status(result.status).json({ error: result.error });
+  }
+  return res.status(result.status).json(result.data);
+}
+
+async function deleteUser(req, res) {
+  const { id } = req.params;
+  const result = await userService.deleteUser(id);
+  if (!result.ok) {
+    return res.status(result.status).json({ error: result.error });
+  }
+  return res.status(result.status).json(result.data);
+}
+
 module.exports = {
   getProfile,
   updateProfile,
@@ -75,4 +116,9 @@ module.exports = {
   getFollowing,
   followUser,
   unfollowUser,
+  createUser,
+  getUsers,
+  getUserById,
+  updateUser,
+  deleteUser,
 };
