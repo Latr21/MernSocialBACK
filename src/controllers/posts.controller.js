@@ -1,39 +1,34 @@
-const PostsService = require("../services/posts.service");
+const express = require("express");
+const router = express.Router();
 
-exports.createPost = async (req, res) => {
-  const { author, content } = req.body;
-  const image = req.file ? `/uploads/${req.file.filename}` : null;
+const multer = require("multer");
+const upload = multer({ dest: "uploads/" });
 
-  const result = await PostsService.Create({ author, content, image });
-  return res.status(result.statusCode).json(result);
-};
+const {
+  createPost,
+  getPosts,
+  getPostById,
+  updatePost,
+  deletePost,
+} = require("../controllers/post.controller");
 
-exports.getAllPosts = async (req, res) => {
-  const result = await PostsService.getAll();
-  return res.status(result.statusCode).json(result);
-};
+const authMiddleware = require("../middlewares/auth.middleware");
+const commentsRoutes = require("./comments.routes");
 
-exports.getOnePost = async (req, res) => {
-  const { id } = req.params;
-  if (!id) return res.status(400).json({ error: true, message: "parametre non valide", statusCode: 400 });
+// Lire
+router.get("/", getPosts);
+router.get("/:id", getPostById);
 
-  const result = await PostsService.GetOne(id);
-  return res.status(result.statusCode).json(result);
-};
+// Créer (avec image optionnelle)
+router.post("/", authMiddleware, upload.single("image"), createPost);
 
-exports.updatePost = async (req, res) => {
-  const { id } = req.params;
-  if (!id) return res.status(400).json({ error: true, message: "parametre non valide", statusCode: 400 });
+// Mettre à jour
+router.put("/:id", authMiddleware, updatePost);
 
-  const { content } = req.body;
-  const result = await PostsService.UpdateOne(id, { content });
-  return res.status(result.statusCode).json(result);
-};
+// Supprimer
+router.delete("/:id", authMiddleware, deletePost);
 
-exports.deletePost = async (req, res) => {
-  const { id } = req.params;
-  if (!id) return res.status(400).json({ error: true, message: "parametre non valide", statusCode: 400 });
+// Commentaires imbriqués (conserve postId)
+router.use("/:postId/comments", commentsRoutes);
 
-  const result = await PostsService.DeleteOne(id);
-  return res.status(result.statusCode).json(result);
-};
+module.exports = router;
