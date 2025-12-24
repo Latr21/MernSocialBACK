@@ -1,39 +1,52 @@
 const PostsService = require("../services/posts.service");
 
-exports.createPost = async (req, res) => {
-  const { author, content } = req.body;
-  const image = req.file ? `/uploads/${req.file.filename}` : null;
+async function getAllPosts(req, res) {
+  try {
+    const result = await PostsService.getAllPosts();
+    return res.status(result.statusCode).json(result);
+  } catch (error) {
+    console.error("erreur getAllPosts:", error);
+    return res.status(500).json({ error: true, message: error.message });
+  }
+}
 
-  const result = await PostsService.Create({ author, content, image });
+async function getOnePost(req, res) {
+  const result = await PostsService.getOnePost(req.params.id);
   return res.status(result.statusCode).json(result);
-};
+}
 
-exports.getAllPosts = async (req, res) => {
-  const result = await PostsService.getAll();
+async function createPost(req, res) {
+  try {
+    const { author, content } = req.body;
+    const image = req.file ? req.file.filename : null;
+
+    const result = await PostsService.createPost({
+      author,
+      content,
+      image,
+    });
+
+    return res.status(result.statusCode).json(result);
+  } catch (error) {
+    console.error("controller createPost error:", error);
+    return res.status(500).json({ error: true, message: "erreur interne" });
+  }
+}
+
+async function updatePost(req, res) {
+  const result = await PostsService.updatePost(req.params.id, req.body);
   return res.status(result.statusCode).json(result);
-};
+}
 
-exports.getOnePost = async (req, res) => {
-  const { id } = req.params;
-  if (!id) return res.status(400).json({ error: true, message: "parametre non valide", statusCode: 400 });
-
-  const result = await PostsService.GetOne(id);
+async function deletePost(req, res) {
+  const result = await PostsService.deletePost(req.params.id);
   return res.status(result.statusCode).json(result);
-};
+}
 
-exports.updatePost = async (req, res) => {
-  const { id } = req.params;
-  if (!id) return res.status(400).json({ error: true, message: "parametre non valide", statusCode: 400 });
-
-  const { content } = req.body;
-  const result = await PostsService.UpdateOne(id, { content });
-  return res.status(result.statusCode).json(result);
-};
-
-exports.deletePost = async (req, res) => {
-  const { id } = req.params;
-  if (!id) return res.status(400).json({ error: true, message: "parametre non valide", statusCode: 400 });
-
-  const result = await PostsService.DeleteOne(id);
-  return res.status(result.statusCode).json(result);
+module.exports = {
+  getAllPosts,
+  getOnePost,
+  createPost,
+  updatePost,
+  deletePost,
 };

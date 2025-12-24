@@ -5,6 +5,8 @@ const upload = multer({ dest: "uploads/" });
 const PostsController = require("../controllers/posts.controller");
 const commentsRoutes = require("./comments.routes");
 
+console.log(PostsController);
+// ajouter eventuellement authenticate + validatewithjoi?
 router.get("/", PostsController.getAllPosts);
 router.get("/:id", PostsController.getOnePost);
 router.post("/", upload.single("image"), PostsController.createPost);
