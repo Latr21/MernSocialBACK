@@ -4,7 +4,7 @@ const authController = require("../controllers/auth.controller");
 const validateWithJoi = require("../middlewares/validation.middleware");
 const { signUpSchema, signInSchema } = require("../dtos/auth.dtos");
 
-// Utilisation de Joi pour la vérif données
+// Utilisation Joi
 
 router.post('/sign-up', validateWithJoi(signUpSchema), authController.SignUp);
 router.post('/sign-in', validateWithJoi(signInSchema), authController.SignIn);
